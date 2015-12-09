@@ -1,20 +1,19 @@
 package jiang.lucy;
 
 public class LucyApp {
-	LucyEventController controller;
+	LucyController controller;
 	LucyView window;
 
 	public LucyApp() {
 		window = new LucyView();
-		controller = new LucyEventController(window);
+		controller = new LucyController(window);
 	}
 	
 	public void execute(long interval, boolean autoStart) {
-		controller.BindClosingWindow();
-		controller.BindBeatButton();
-		controller.BindSwitchButton();
-		
-		controller.launch(interval, autoStart);
+		controller.setInterval(interval);
+		if (autoStart) {
+			controller.raiseSwitch();
+		}
 	}
 	
 	

@@ -1,4 +1,4 @@
-package jiang.lucy;
+package jiang.lucy.model;
 
 public class LucyHeart {
 

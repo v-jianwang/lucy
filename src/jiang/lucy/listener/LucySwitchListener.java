@@ -1,16 +1,17 @@
-package jiang.lucy;
+package jiang.lucy.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import jiang.lucy.LucyController;
 import jiang.lucy.thread.LucyBeater;
 
 public class LucySwitchListener implements ActionListener {
 	
-	LucyEventController controller;
+	LucyController controller;
 	LucyBeater beater;
 	
-	public LucySwitchListener(LucyEventController controller) {
+	public LucySwitchListener(LucyController controller) {
 		this.controller = controller;
 	}
 
@@ -29,20 +30,20 @@ public class LucySwitchListener implements ActionListener {
 		}
 	}
 	
+	
 	private void startBeater() {
 		beater = new LucyBeater(controller);	
-		
 		beater.start();	
-		
-		controller.notifyState("started");
+		controller.displayState("started");
 	}
 
+	
 	private void stopBeater() {
 		synchronized(beater) {
 			beater.notify();
 		}
 		
-		controller.notifyState("stopped");
+		controller.displayState("stopped");
 	}
 
 }

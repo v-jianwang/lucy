@@ -1,14 +1,14 @@
 package jiang.lucy.thread;
 
-import jiang.lucy.LucyEventController;
+import jiang.lucy.LucyController;
 
 public class LucyBeater extends Thread {
 	
-	private LucyEventController controller;
+	private LucyController controller;
 	
 	private long delay;
 	
-	public LucyBeater(LucyEventController controller) {
+	public LucyBeater(LucyController controller) {
 		this.controller = controller;
 		this.delay = controller.getInterval();
 	}
@@ -20,7 +20,7 @@ public class LucyBeater extends Thread {
 	
 		while (!controller.getIsStop()) {
 			
-			controller.notifyState("Next click in ("+ (idelay / step) +") sec.");
+			controller.displayState("Next click in ("+ (idelay / step) +") sec.");
 			
 			if (idelay < step) {
 				idelay = delay - step;;

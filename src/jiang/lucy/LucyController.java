@@ -7,14 +7,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class LucyEventController {
+import jiang.lucy.listener.LucyBeatListener;
+import jiang.lucy.listener.LucyHttpReceiveListener;
+import jiang.lucy.listener.LucySwitchListener;
+import jiang.lucy.model.LucyState;
+import jiang.lucy.thread.LucyHttpListener;
+
+public class LucyController {
 	
 	LucyView view;
 	private boolean isStop;
 	private long interval;
 	
+	
 	public long getInterval() {
 		return this.interval;
+	}
+	public void setInterval(long interval) {
+		this.interval = interval;
 	}
 	
 	public synchronized void setIsStop(boolean isStop) {
@@ -24,13 +34,19 @@ public class LucyEventController {
 		return this.isStop;
 	}
 	
-	public LucyEventController(LucyView view) {
+	public LucyController(LucyView view) {
 		this.view = view;
 		this.isStop = true;
 		this.interval = 10 * 1000; // 10s as default
+		
+		BindClosingWindow();
+		BindBeatButton();
+		BindSwitchButton();
+		
+		AddHttpEvent();
 	}
 	
-	public void BindClosingWindow() {
+	private void BindClosingWindow() {
 		Frame frame = view.getFrame();
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -43,31 +59,31 @@ public class LucyEventController {
 		});
 	}
 	
-	public void BindBeatButton() {
-		LucyHeart heart = new LucyHeart("Lucy's heartbeat: ");
-		
+	
+	private void BindBeatButton() {
 		Button sender = view.getBeatButton();
-		sender.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				heart.Beat();
-				view.outputBeat(heart.getHeartBeat());
-			}
-		});
+		LucyBeatListener listener = new LucyBeatListener(this);
+		sender.addActionListener(listener);
 	}
 	
-	public void BindSwitchButton() {
+	
+	private void BindSwitchButton() {
 		Button sender = view.getSwitchButton();
-		LucySwitchListener switchListener = new LucySwitchListener(this);
-		sender.addActionListener(switchListener);
+		LucySwitchListener switchController = new LucySwitchListener(this);
+		sender.addActionListener(switchController);
 	}
 	
-	public void launch(long interval, boolean autoStart) {
-		this.interval = interval;
-		if (autoStart) {
-			raiseSwitch();
-		}
+	
+	
+	
+	private void AddHttpEvent() {
+		LucyHttpListener listener = new LucyHttpListener(8070, 10);
+		LucyHttpReceiveListener receiveListener = new LucyHttpReceiveListener(this);
+		listener.addActionListener(receiveListener);
+		
+		listener.start();
 	}
+	
 	
 	public void raiseSwitch() {
 		view.switchClick();
@@ -76,8 +92,13 @@ public class LucyEventController {
 	public void raiseBeat() {
 		view.beatClick();
 	}
+	
+	public void displayBeat(String beat) {
+		view.outputBeat(beat);
+	}
+	
 
-	public void notifyState(String state) {
+	public void displayState(String state) {
 		if ("stopped".equalsIgnoreCase(state)) {
 			view.outputState("Click is stopped.");
 			view.setSwitchButtonText("Start");
@@ -89,6 +110,13 @@ public class LucyEventController {
 		else {
 			view.outputState(state);
 		}
+	}
+	
+	public LucyState getState() {
+		LucyState state = new LucyState();
+		state.setInterval(this.interval);
+		state.setIsRunning(!getIsStop());
+		return state;
 	}
 
 	private void dispose() {
