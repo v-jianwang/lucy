@@ -11,8 +11,13 @@ public class LucyHttpListener extends Thread {
 	private ServerSocket socket;
 	
 	private LucyHttpReceiveListener receiveListener;
+	
+	private volatile boolean running;
 
 	public LucyHttpListener(int port, int backlog) {
+		
+		super.setName("httplistener");
+		running = true;
 		
 		try {
 			socket = new ServerSocket(port, backlog);
@@ -24,13 +29,15 @@ public class LucyHttpListener extends Thread {
 	
 	@Override
 	public void run() {
-
 		while (true) {
-			
 			try {
 				Socket s = this.socket.accept();
-				receiveListener.actionPerformed(s);
-				
+				if (running) {
+					receiveListener.actionPerformed(s);
+				}
+				else {
+					break;
+				}
 			} catch (IOException e) {
 				System.out.println("error when accept a socket. " + e.getMessage());
 			}
@@ -40,5 +47,10 @@ public class LucyHttpListener extends Thread {
 	
 	public void addActionListener(LucyHttpReceiveListener receiveListener) {
 		this.receiveListener = receiveListener;
+	}
+	
+	public void end() throws IOException {
+		running = false;
+		new Socket(socket.getInetAddress(), socket.getLocalPort()).close();
 	}
 }

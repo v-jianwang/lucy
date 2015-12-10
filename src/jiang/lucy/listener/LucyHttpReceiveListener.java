@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import jiang.lucy.LucyController;
-import jiang.lucy.model.LucyHttpResponse;
+import jiang.lucy.thread.LucyHttpResponse;
 import jiang.lucy.model.LucyHttpAction;
 import jiang.lucy.model.LucyHttpMessage;
 
@@ -71,6 +71,11 @@ public class LucyHttpReceiveListener {
 	}
 	
 	private void informState(LucyHttpResponse response) {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			System.out.println("error when inform state: " + e.getMessage());
+		}
 		response.setLucyState(controller.getState());
 	}
 }

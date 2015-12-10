@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lucy Click - Commander</title>
+</head>
+<body>
+	<h1>Lucy received command</h1>
+	<p>The command you sent to Lucy is {action}</p>
+	<ul>
+		<li>Lucy's {isrunning}</li>
+		<li>Beating interval: {interval} second(s)</li>
+	</ul>
+	
+	<p>You can do the following commands to Lucy</p>
+	<ul>
+		<li>
+			<form method="get" action="check">
+				<input type="submit" value="    Check    "/>
+			</form>
+		</li>
+		<br/>	
+		<li>
+			<form method="get" action="start">
+				<input type="submit" value="    Start    "/>
+			</form>
+		</li>
+		<br/>
+		<li>
+			<form method="get" action="stop">
+				<input type="submit" value="    Stop    "/>
+			</form>		
+		</li>
+		<br/>
+		<li>
+			<form method="get" action="beat">
+				<input type="submit" value="    Beat    "/>
+			</form>		
+		</li>
+					
+	</ul>	
+</body>
+</html>
