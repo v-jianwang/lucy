@@ -5,9 +5,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.jar.JarFile;
 
 import jiang.lucy.model.LucyHttpMessage;
 import jiang.lucy.model.LucyState;
@@ -52,14 +55,16 @@ public class LucyHttpResponse implements Runnable {
 		builder.append("HTTP/1.1" + space + "200" + space + "OK" + lineEnd);
 		builder.append("Date: " + new Date() + lineEnd);
 		builder.append("Content-Type: text/html" + lineEnd);
-		
-		File page = new File("./resources/manager.html");
-		builder.append("Content-Length: " + page.length() + lineEnd);
-		
-		builder.append(lineEnd);
-		
+
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(page));
+			InputStream stream = getClass().getResourceAsStream("httpResponse.html");
+			InputStreamReader sreader = new InputStreamReader(stream);
+			BufferedReader reader = new BufferedReader(sreader);
+			
+			builder.append("Content-Length: " + stream.available() + lineEnd);
+			
+			builder.append(lineEnd);
+
 			String line;
 			
 			while ((line = reader.readLine()) != null) {

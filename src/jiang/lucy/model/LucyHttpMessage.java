@@ -31,6 +31,7 @@ public class LucyHttpMessage {
 			requestLine = "noset";
 		}
 	
+		System.out.println("http request: " + requestLine);
 		String uri = requestLine.split(" ")[1];
 		Pattern pattern = Pattern.compile(LucyHttpAction.VALUE_PATTERN);
 		Matcher matcher = pattern.matcher(uri);
