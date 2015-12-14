@@ -48,6 +48,15 @@ public class LucyHttpReceiveListener {
 		else if (message.getAction() == LucyHttpAction.BEAT) {
 			doBeatCommand();
 		}
+		else if (message.getAction() == LucyHttpAction.SET) {
+			long interval;
+			try {
+				interval = Long.parseLong(message.getParameter("interval"));
+				doSetCommand(interval);
+			} catch (NumberFormatException ex) {
+				System.out.println("error: interval is in invalid format.");
+			}
+		}
 		
 		informState(response);
 		Thread responseProcess = new Thread(response);
@@ -68,6 +77,19 @@ public class LucyHttpReceiveListener {
 	
 	private void doBeatCommand() {
 		controller.raiseBeat();
+	}
+	
+	private void doSetCommand(long interval) {
+		controller.setInterval(interval);
+		if (!controller.getIsStop()) {
+			doStopCommand();
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				System.out.println("error when restart: " + e.getMessage());
+			}
+			doStartCommand();
+		}
 	}
 	
 	private void informState(LucyHttpResponse response) {

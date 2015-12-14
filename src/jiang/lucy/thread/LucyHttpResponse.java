@@ -2,15 +2,13 @@ package jiang.lucy.thread;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.jar.JarFile;
 
 import jiang.lucy.model.LucyHttpMessage;
 import jiang.lucy.model.LucyState;
