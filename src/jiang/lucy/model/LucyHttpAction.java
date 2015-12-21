@@ -10,6 +10,6 @@ public enum LucyHttpAction {
 	
 	public static final String VALUE_PATTERN = "(start|stop|set|beat|check)";
 	
-	public static final String PARAM_PATTERN = "[\\?|\\&](?<key>\\S+)=(?<value>\\S+)";
+	public static final String PARAM_PATTERN = "[\\?\\&](?<key>\\S+)=(?<value>\\S+)";
 
 }
